@@ -23,7 +23,7 @@ namespace SQLDB
         public Form1()
         {
             InitializeComponent();
-            disp_data();
+            //disp_data();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -50,7 +50,8 @@ namespace SQLDB
             cmd.ExecuteNonQuery();
 
 
-            //I need to add the Attributes from the SERVER DB to MY PC MEMORY
+            //I need to add the Attributes from the SERVER DB
+            //to MY PC MEMORY
             DataTable dt = new DataTable();
 
             //format the data attribute to C#  Understands
@@ -94,6 +95,7 @@ namespace SQLDB
             cmd.CommandType = CommandType.Text;
             cmd.CommandText = "DELETE FROM table_db WHERE name = '"+textBoxName.Text+"'";
             cmd.ExecuteNonQuery();
+           
 
             conn.Close();
 
@@ -104,6 +106,49 @@ namespace SQLDB
         private void dataGridViewDB_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void buttonDisplay_Click(object sender, EventArgs e)
+        {
+            disp_data();
+        }
+
+        private void buttonUpdate_Click(object sender, EventArgs e)
+        {
+            conn.Open();
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = "UPDATE table_db SET name='" + textBoxCity.Text + "' WHERE name='" + textBoxName.Text + "'";
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+
+            MessageBox.Show("Record Updated Successfully");
+            disp_data();
+        }
+
+        private void buttonSearch_Click(object sender, EventArgs e)
+        {
+            conn.Open();
+
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = "SELECT * FROM table_db WHERE name='" + textBoxName.Text + "'";
+            cmd.ExecuteNonQuery();
+
+            DataTable dt = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            da.Fill(dt);
+
+            dataGridViewDB.DataSource = dt; 
+
+            conn.Close();
+        }
+
+        private void buttonExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }
